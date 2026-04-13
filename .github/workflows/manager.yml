@@ -1,0 +1,56 @@
+name: "NJSERVICES AI Expert"
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  expert-developer:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Gemini Technical Expert
+        id: ai_coder
+        run: |
+          # 1. جمع بيانات الملفات الأساسية ليعرف جيميني سياق المشروع
+          CSS_CONTEXT=$(cat nexus-ui.css)
+          
+          # 2. استدعاء جيميني مع نظام "خبير تقني"
+          RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d "{
+            \"contents\": [{
+              \"parts\": [{
+                \"text\": \"You are a Senior UI/UX Developer at NJSERVICES. Context: $CSS_CONTEXT. Task: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}. STRICT RULES: 1. Maintain the luxury black and gold aesthetic. 2. Write professional, optimized CSS. 3. Return ONLY the code. No explanations or markdown backticks.\"
+              }]
+            }]
+          }")
+          
+          # 3. معالجة الرد وتنظيفه من أي شوائب نصية
+          echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text' | sed 's/```css//g' | sed 's/```//g' > nexus-ui.css
+          
+          echo "AI Optimization Complete."
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Create Professional PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: "Feat: AI-Powered Technical Enhancement for Issue #${{ github.event.issue.number }}"
+          title: "💎 Technical Upgrade - Issue #${{ github.event.issue.number }}"
+          body: |
+            ### 🛠 تم التحديث بواسطة خبير NJSERVICES الذكي
+            بناءً على الطلب في Issue #${{ github.event.issue.number }}، قام النظام بـ:
+            - تحسين تجربة المستخدم (UX).
+            - تحديث واجهة الـ CSS بلمسة فخمة.
+            - ضمان استقرار الكود وتوافقه.
+          branch: "expert-update-${{ github.event.issue.number }}"
+          delete-branch: true
