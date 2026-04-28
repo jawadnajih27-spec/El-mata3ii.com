@@ -1073,7 +1073,7 @@ async function handleDelete(){
     await sbFetch(`products?id=eq.${deleteId}`,{method:'DELETE'});
     closeDeleteModal();
     await loadProducts();
-    showToast('تم حذف المنتج');
+    showToast('ت<<<<<<< uzgyyg-codex/fix-reviews-section-display-in-admin.htmlم حذف المنتج');
   }catch(e){
     showToast('تعذر حذف المنتج', true);
   }
@@ -1081,6 +1081,55 @@ async function handleDelete(){
 
 // ── Reviews Management ───────────────────────────
 async function loadReviews(filter){
+
+  if(!filter) filter = 'pending';
+  console.log('جاري تحميل التقييمات:', filter);
+  
+  try{
+    const url = `${SUPABASE_URL}/rest/v1/reviews?select=*&status=eq.${filter}&order=created_at.desc`;
+    console.log('URL:', url);
+    
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if(!res.ok){
+      const err = await res.text();
+      console.error('خطأ:', err);
+      throw new Error(err);
+    }
+    
+    const data = await res.json();
+    console.log('تم التحميل:', data.length, 'تقييم');
+    
+    const tbody = document.getElementById('reviewsTableBody');
+    if(!tbody) {
+      console.error('العنصر reviewsTableBody غير موجود');
+      return;
+    }
+    
+    if(!data || !data.length){
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><p>لا توجد تقييمات</p></div></td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td><span class="tag">${escapeHtml(String(r.product_id).substring(0,8))}...</span></td>
+        <td class="td-name">${escapeHtml(r.visitor_name||'—')}</td>
+        <td style="max-width:200px;font-size:.85rem">${escapeHtml(r.comment||'—')}</td>
+        <td><span style="color:var(--accent);font-weight:800">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td>
+        <td><span class="tag" style="background:rgba(212,175,55,.1);color:#d4af37">قيد الانتظار</span></td>
+        <td style="font-size:.8rem;color:var(--text-soft)">${new Date(r.created_at).toLocaleDateString('ar')}</td>
+        <td>
+          <div class="actions">
+            <button class="action" onclick="approveReview('${r.id}')" style="color:#1f8b4d">✓</button>
+            <button class="action del" onclick="rejectReview('${r.id}')" style="color:#dc4f47">✕</button>
+
   try{
     if(!filter) filter = 'pending';
     const res = await fetch(
@@ -1115,10 +1164,17 @@ async function loadReviews(filter){
               <button class="action" onclick="approveReview('${r.id}')" title="موافقة" style="color:#1f8b4d">&#10003;</button>
               <button class="action del" onclick="rejectReview('${r.id}')" title="رفض" style="color:#dc4f47">&#10005;</button>
             ` : '<span style="font-size:.75rem;color:var(--text-soft)">تم</span>'}
+
           </div>
         </td>
       </tr>
     `).join('');
+    
+  }catch(e){
+    console.error('فشل:', e);
+    const tbody = document.getElementById('reviewsTableBody');
+    if(tbody) tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><p>خطأ: ' + e.message + '</p></div></td></tr>';
+
   }catch(e){
     document.getElementById('reviewsTableBody').innerHTML = 
       '<tr><td colspan="7"><div class="empty"><p>خطأ: ' + e.message + '</p></div></td></tr>';
@@ -1316,7 +1372,10 @@ function setActiveSection(section){
   document.getElementById('adminSearch').style.display    = isProducts?'':'none';
   document.getElementById('addProductBtn').style.display  = isProducts?'inline-flex':'none';
   
-  if(section === 'reviews') loadReviews('pending');
+  if(section === 'reviews') {
+    console.log('تفعيل قسم التقييمات');
+    setTimeout(() => loadReviews('pending'), 200);
+  }
   
   closeSidebar();
 }
