@@ -189,12 +189,51 @@ nav{
 .modal-thumb{width:82px;height:82px;border-radius:16px;border:2px solid transparent;overflow:hidden;cursor:pointer;flex:none;background:var(--surface)}
 .modal-thumb.active{border-color:var(--accent)}
 .modal-thumb img{width:100%;height:100%;object-fit:cover}
-.modal-body{padding:26px}
+.modal-body{padding:26px;overflow-y:auto;max-height:65vh}
 .modal-body .badge-cat{background:rgba(var(--accent-rgb),.10);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.18)}
 .modal-title{font-size:1.65rem;font-weight:900;margin:12px 0 8px}
 .modal-desc{color:var(--text-soft);line-height:1.95}
 .modal-price-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
 .modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+
+/* ── Urgency bar ── */
+.urgency-bar{
+  background:linear-gradient(135deg,#dc3545,#ff6b6b);color:#fff;
+  padding:10px 14px;border-radius:14px;font-weight:800;font-size:.9rem;
+  text-align:center;margin-bottom:12px;animation:pulse-urgency 2s infinite;
+}
+@keyframes pulse-urgency{0%,100%{opacity:1}50%{opacity:.85}}
+
+/* ── Refund badge ── */
+.refund-badge{
+  display:flex;align-items:center;gap:8px;padding:10px 14px;
+  border-radius:14px;background:rgba(31,139,77,.08);border:1px solid rgba(31,139,77,.2);
+  color:#1f8b4d;font-weight:800;font-size:.85rem;margin-bottom:12px;
+}
+.refund-badge svg{width:18px;height:18px;stroke:currentColor;fill:none;flex:none}
+
+/* ── Reviews Section ── */
+.reviews-section{margin-top:18px;border-top:1px solid var(--border);padding-top:16px}
+.reviews-section h4{font-size:.95rem;font-weight:900;margin-bottom:12px}
+.review-item{padding:12px;background:var(--bg-soft);border-radius:14px;margin-bottom:10px;border:1px solid var(--border)}
+.review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.review-name{font-weight:800;font-size:.9rem}
+.review-stars{color:var(--accent);font-size:.85rem;letter-spacing:2px}
+.review-comment{color:var(--text-soft);font-size:.85rem;line-height:1.7}
+.review-date{font-size:.75rem;color:var(--text-soft)}
+.review-form{margin-top:12px;display:grid;gap:10px}
+.review-form input,.review-form textarea{
+  width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+  background:var(--bg-soft);color:var(--text);outline:none;
+}
+.review-form textarea{min-height:70px;resize:vertical}
+.star-rating{display:flex;gap:4px;font-size:1.4rem;cursor:pointer}
+.star-rating span{color:var(--border);transition:.15s ease}
+.star-rating span.active{color:var(--accent)}
+.review-form button{
+  padding:10px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#111;font-weight:900;cursor:pointer;
+}
 
 .cart-drawer{
   position:fixed;top:0;inset-inline-end:-430px;width:min(430px,100vw);height:100vh;
@@ -338,6 +377,16 @@ footer span{color:var(--accent);font-weight:800}
         <span class="badge badge-cat" id="modalCategory">-</span>
         <div class="modal-title" id="modalTitle">-</div>
         <div class="modal-desc" id="modalDesc">-</div>
+        
+        <!-- Urgency Bar -->
+        <div class="urgency-bar" id="urgencyBar" style="display:none">🔥 <span id="urgencyText"></span></div>
+        
+        <!-- Refund Badge -->
+        <div class="refund-badge" id="refundBadge" style="display:none">
+          <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"></path></svg>
+          <span id="refundText"></span>
+        </div>
+        
         <div class="modal-price-row">
           <span class="price" id="modalPrice">0</span>
           <span class="old-price" id="modalOldPrice"></span>
@@ -345,6 +394,25 @@ footer span{color:var(--accent);font-weight:800}
         <div class="modal-actions">
           <button class="primary-btn" id="modalAddBtn" type="button" data-ar="أضف إلى السلة" data-en="Add to cart">أضف إلى السلة</button>
           <button class="ghost-btn" id="modalWhatsAppBtn" type="button" data-ar="اطلب عبر واتساب" data-en="Order by WhatsApp">اطلب عبر واتساب</button>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+          <h4 data-ar="التقييمات" data-en="Reviews">التقييمات</h4>
+          <div id="reviewsList"></div>
+          <div class="review-form" id="reviewForm">
+            <input type="text" id="reviewName" placeholder="اسمك..." data-ar-placeholder="اسمك..." data-en-placeholder="Your name..." />
+            <div class="star-rating" id="starRating">
+              <span onclick="setRating(1)">★</span>
+              <span onclick="setRating(2)">★</span>
+              <span onclick="setRating(3)">★</span>
+              <span onclick="setRating(4)">★</span>
+              <span onclick="setRating(5)">★</span>
+            </div>
+            <textarea id="reviewComment" placeholder="تعليقك عن المنتج..." data-ar-placeholder="تعليقك عن المنتج..." data-en-placeholder="Your comment about the product..."></textarea>
+            <button type="button" onclick="submitReview()" data-ar="أرسل التقييم" data-en="Submit review">أرسل التقييم</button>
+            <p id="reviewMsg" style="font-size:.82rem;color:var(--accent);margin-top:4px;display:none"></p>
+          </div>
         </div>
       </div>
     </div>
@@ -387,7 +455,7 @@ const SUPABASE_KEY  = 'sb_publishable_Eshtee3MlIfxrVNtAnWIeQ_MMBWe_4e';
 
 const CART_KEY = 'nj_cart';
 const LANG_KEY = 'nj_lang';
-const SETTINGS_ID = 1; // الصف الوحيد في جدول store_settings
+const SETTINGS_ID = 1;
 
 const DEFAULT_SETTINGS = {
   store_name: 'STORE',
@@ -397,15 +465,19 @@ const DEFAULT_SETTINGS = {
   store_mode: 'dark',
   hero_title_ar: '<span>اكتشف</span> أفضل المنتجات',
   hero_title_en: 'Discover <span>Premium</span> Products',
-  hero_subtitle_ar: 'تسوق بذوق رفيع من مجموعتنا المختارة بعناية مع تجربة عرض أسرع وأكثر سلاسة.',
-  hero_subtitle_en: 'Shop from our carefully curated collection with a faster and smoother storefront experience.',
+  hero_subtitle_ar: 'تسوق بذوق رفيع من مجموعتنا المختارة بعناية.',
+  hero_subtitle_en: 'Shop from our carefully curated collection.',
   hero_button_ar: 'تسوق الآن',
   hero_button_en: 'Shop now',
   hero_slides: [],
   contact_email: '',
   contact_phone: '',
   footer_text_ar: 'الطلب والتواصل عبر واتساب',
-  footer_text_en: 'Orders and contact via WhatsApp'
+  footer_text_en: 'Orders and contact via WhatsApp',
+  refund_enabled: false,
+  refund_days: 7,
+  refund_text_ar: 'ضمان استرجاع المال خلال 7 أيام',
+  refund_text_en: 'Money-back guarantee within 7 days'
 };
 
 let storeSettings = {...DEFAULT_SETTINGS};
@@ -417,6 +489,7 @@ let currentProduct = null;
 let currentModalIndex = 0;
 let heroIndex = 0;
 let heroTimer = null;
+let currentRating = 0;
 
 // ── Supabase helper ──────────────────────────────
 async function sbFetch(path, options = {}){
@@ -433,7 +506,7 @@ async function sbFetch(path, options = {}){
   try{ return await res.json(); } catch{ return null; }
 }
 
-// ── Load settings from Supabase ──────────────────
+// ── Load settings ────────────────────────────────
 async function loadStoreSettings(){
   try{
     const rows = await sbFetch(`store_settings?id=eq.${SETTINGS_ID}&select=*`);
@@ -443,7 +516,6 @@ async function loadStoreSettings(){
       Object.keys(DEFAULT_SETTINGS).forEach(k => {
         if(row[k] !== null && row[k] !== undefined) storeSettings[k] = row[k];
       });
-      // heroSlides stored as JSON array or JSONB
       if(typeof storeSettings.hero_slides === 'string'){
         try{ storeSettings.hero_slides = JSON.parse(storeSettings.hero_slides); }
         catch{ storeSettings.hero_slides = []; }
@@ -451,7 +523,6 @@ async function loadStoreSettings(){
       if(!Array.isArray(storeSettings.hero_slides)) storeSettings.hero_slides = [];
     }
   }catch(e){
-    // silently fall back to defaults
     console.warn('Settings load failed, using defaults', e);
   }
   applyStoreSettings();
@@ -460,12 +531,10 @@ async function loadStoreSettings(){
 function applyStoreSettings(){
   document.body.dataset.theme = storeSettings.store_theme || 'gold';
   document.body.dataset.mode  = storeSettings.store_mode  || 'dark';
-  // Name
   const name = storeSettings.store_name || 'STORE';
   document.getElementById('storeName').textContent   = name;
   document.getElementById('footerName').textContent  = name;
   document.title = name;
-  // Footer
   const fc = document.getElementById('footerContact');
   if(fc){
     fc.dataset.ar = storeSettings.footer_text_ar || DEFAULT_SETTINGS.footer_text_ar;
@@ -634,7 +703,7 @@ function renderProducts(query=''){
 }
 
 // ── Product Modal ────────────────────────────────
-function openProductModal(id){
+const originalOpenProductModal = function(id){
   currentProduct = allProducts.find(p=>p.id===id||p.id===Number(id));
   if(!currentProduct) return;
   currentModalIndex = 0;
@@ -651,7 +720,143 @@ function openProductModal(id){
 
   renderModalImages(images, name);
   document.getElementById('productModalOverlay').classList.add('open');
+};
+
+function openProductModal(id){
+  originalOpenProductModal(id);
+  loadReviews(id);
+  currentRating = 0;
+  renderStars();
+  document.getElementById('reviewMsg').style.display = 'none';
+  document.getElementById('reviewName').value = '';
+  document.getElementById('reviewComment').value = '';
+  
+  // Urgency
+  if(currentProduct && currentProduct.stock_count && currentProduct.stock_count > 0 && currentProduct.stock_count <= 10){
+    document.getElementById('urgencyBar').style.display = 'block';
+    document.getElementById('urgencyText').textContent = 
+      (currentLang==='ar' ? `باقي ${currentProduct.stock_count} قطع فقط — اطلب الآن قبل النفاد` 
+                          : `Only ${currentProduct.stock_count} left — Order before they run out`);
+  } else {
+    document.getElementById('urgencyBar').style.display = 'none';
+  }
+  
+  // Refund
+  if(storeSettings.refund_enabled){
+    document.getElementById('refundBadge').style.display = 'flex';
+    document.getElementById('refundText').textContent = 
+      currentLang==='ar' ? storeSettings.refund_text_ar : storeSettings.refund_text_en;
+  } else {
+    document.getElementById('refundBadge').style.display = 'none';
+  }
 }
+
+// ── Star Rating ──────────────────────────────────
+function setRating(rating){
+  currentRating = rating;
+  renderStars();
+}
+window.setRating = setRating;
+
+function renderStars(){
+  const stars = document.querySelectorAll('#starRating span');
+  stars.forEach((star, i) => {
+    star.classList.toggle('active', i < currentRating);
+  });
+}
+
+// ── Load reviews ─────────────────────────────────
+async function loadReviews(productId){
+  const container = document.getElementById('reviewsList');
+  try{
+    const reviews = await sbFetch(`reviews?product_id=eq.${productId}&status=eq.approved&order=created_at.desc&limit=10`);
+    if(!reviews || !reviews.length){
+      container.innerHTML = `<p style="color:var(--text-soft);font-size:.85rem">${currentLang==='ar'?'لا توجد تقييمات بعد':'No reviews yet'}</p>`;
+      return;
+    }
+    container.innerHTML = reviews.map(r=>`
+      <div class="review-item">
+        <div class="review-header">
+          <span class="review-name">${escapeHtml(r.visitor_name)}</span>
+          <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+        </div>
+        <div class="review-comment">${escapeHtml(r.comment)}</div>
+        <div class="review-date">${new Date(r.created_at).toLocaleDateString(currentLang==='ar'?'ar':'en')}</div>
+      </div>
+    `).join('');
+  }catch(e){
+    container.innerHTML = '';
+  }
+}
+
+// ── Submit review ────────────────────────────────
+async function submitReview(){
+  if(!currentProduct) return;
+  const name = document.getElementById('reviewName').value.trim();
+  const comment = document.getElementById('reviewComment').value.trim();
+  const msgEl = document.getElementById('reviewMsg');
+  
+  if(!name || !comment || currentRating === 0){
+    msgEl.textContent = currentLang==='ar'?'الرجاء إدخال الاسم والتقييم والتعليق':'Please enter name, rating, and comment';
+    msgEl.style.display = 'block';
+    msgEl.style.color = '#dc3545';
+    return;
+  }
+  
+  // تعطيل الزر أثناء الإرسال
+  const btn = document.querySelector('#reviewForm button');
+  btn.disabled = true;
+  btn.textContent = currentLang==='ar'?'جاري الإرسال...':'Sending...';
+  
+  try{
+    const payload = {
+      product_id: currentProduct.id,
+      visitor_name: name,
+      comment: comment,
+      rating: currentRating,
+      status: 'pending'
+    };
+    
+    console.log('Sending review:', payload);
+    
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/reviews`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+    
+    if(!res.ok){
+      const errText = await res.text();
+      console.error('Review submit error:', errText);
+      throw new Error(errText);
+    }
+    
+    msgEl.textContent = currentLang==='ar'?'شكراً! تقييمك قيد المراجعة':'Thank you! Your review is under review';
+    msgEl.style.display = 'block';
+    msgEl.style.color = 'var(--accent)';
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewComment').value = '';
+    currentRating = 0;
+    renderStars();
+  }catch(e){
+    console.error('Review submit failed:', e);
+    msgEl.textContent = currentLang==='ar'?`فشل: ${e.message}`:`Failed: ${e.message}`;
+    msgEl.style.display = 'block';
+    msgEl.style.color = '#dc3545';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = currentLang==='ar'?'أرسل التقييم':'Submit review';
+  }
+}
+window.submitReview = submitReview;
 
 function renderModalImages(images, altText=''){
   const main   = document.getElementById('modalMainImage');
@@ -772,6 +977,9 @@ function scrollToProducts(){
 }
 function escapeAttr(value=''){
   return String(value).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeHtml(v=''){
+  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function toast(message){
   const el = document.getElementById('toast');
