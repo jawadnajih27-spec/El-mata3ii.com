@@ -154,6 +154,45 @@ tr:last-child td{border-bottom:none}
 .preview-main{inset-inline-start:8px;background:rgba(var(--accent-rgb),.95);color:#111}
 .preview-order{position:absolute;bottom:8px;inset-inline-start:8px;background:rgba(0,0,0,.65);color:#fff;font-size:.72rem;padding:4px 8px;border-radius:999px}
 
+/* ── Notifications ── */
+.icon-btn{position:relative;width:42px;padding:0;display:grid;place-items:center;border:1px solid var(--border);background:var(--glass,var(--surface));color:var(--text);border-radius:999px;min-height:42px;cursor:pointer;transition:.2s ease}
+.icon-btn:hover{border-color:rgba(var(--accent-rgb),.45)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none}
+.cart-count{
+  position:absolute;top:-4px;inset-inline-end:-4px;
+  width:18px;height:18px;border-radius:50%;display:grid;place-items:center;
+  font-size:.65rem;font-weight:900;background:var(--accent);color:#111;
+}
+.notifications-dropdown{
+  position:absolute;top:60px;inset-inline-end:20px;width:380px;max-height:480px;overflow:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.25);
+  z-index:100;padding:16px;
+}
+.notif-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.notif-head h4{font-size:.95rem;font-weight:900}
+.notif-item{padding:12px;border-radius:14px;background:var(--bg-soft);margin-bottom:8px;border:1px solid var(--border);cursor:pointer;transition:.15s}
+.notif-item:hover{border-color:rgba(var(--accent-rgb),.2)}
+.notif-item.unread{border-inline-start:3px solid var(--accent)}
+.notif-item .notif-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.notif-item .notif-name{font-weight:800;font-size:.85rem}
+.notif-item .notif-time{font-size:.74rem;color:var(--text-soft)}
+.notif-item .notif-msg{font-size:.82rem;color:var(--text-soft);line-height:1.6}
+.notif-stars{color:var(--accent);font-size:.8rem}
+.notif-empty{padding:32px;text-align:center;color:var(--text-soft)}
+
+/* ── Refund settings ── */
+.toggle-wrap{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.toggle-label{font-weight:800;font-size:.9rem}
+.toggle-switch{
+  width:48px;height:26px;border-radius:999px;background:var(--border);cursor:pointer;position:relative;transition:.2s
+}
+.toggle-switch.active{background:var(--accent)}
+.toggle-switch::after{
+  content:'';position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;
+  border-radius:50%;background:#fff;transition:.2s
+}
+.toggle-switch.active::after{inset-inline-start:25px}
+
 .modal-overlay,.confirm-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);
   opacity:0;pointer-events:none;transition:.25s ease;z-index:2000;
@@ -192,7 +231,6 @@ tr:last-child td{border-bottom:none}
 .mobile-tabs{display:none}
 .overlay-nav{display:none}
 
-/* Sync status badge */
 .sync-badge{
   display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
   border-radius:999px;font-size:.78rem;font-weight:800;border:1px solid var(--border);
@@ -220,6 +258,7 @@ tr:last-child td{border-bottom:none}
   .content{padding:16px}
   .mobile-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px;margin-bottom:6px}
   .mobile-tabs .nav-btn{min-width:max-content;padding:0 12px}
+  .notifications-dropdown{width:calc(100vw - 40px);inset-inline-end:10px}
 }
 @media(max-width:640px){
   .row-2,.row-3{grid-template-columns:1fr}
@@ -248,6 +287,10 @@ tr:last-child td{border-bottom:none}
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
         <span>الشريط الرئيسي</span>
       </button>
+      <button class="nav-btn" data-section="reviews" type="button">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>التقييمات</span>
+      </button>
       <button class="nav-btn" data-section="settings" type="button">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.36.53.87.87 1.51 1H21a2 2 0 1 1 0 4h-.09c-.64.13-1.15.47-1.51 1Z"></path></svg>
         <span>الإعدادات العامة</span>
@@ -268,6 +311,10 @@ tr:last-child td{border-bottom:none}
         <h2 id="sectionTitle">المنتجات</h2>
       </div>
       <div class="topbar-actions">
+        <button class="icon-btn" id="notificationsBtn" type="button" style="position:relative">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="cart-count" id="notifCount" style="display:none">0</span>
+        </button>
         <span class="sync-badge" id="syncBadge">
           <span class="sync-dot"></span>
           <span id="syncText">جاهز</span>
@@ -277,6 +324,14 @@ tr:last-child td{border-bottom:none}
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           <span>إضافة منتج</span>
         </button>
+      </div>
+      <!-- Notifications dropdown -->
+      <div class="notifications-dropdown" id="notifDropdown" style="display:none">
+        <div class="notif-head">
+          <h4>الإشعارات</h4>
+          <button class="small-btn" onclick="markAllRead()" style="font-size:.78rem">تحديد الكل مقروء</button>
+        </div>
+        <div class="notif-list" id="notifList"></div>
       </div>
     </header>
 
@@ -302,11 +357,11 @@ tr:last-child td{border-bottom:none}
             <table>
               <thead>
                 <tr>
-                  <th>الصورة</th><th>الاسم</th><th>الفئة</th><th>السعر</th><th>الصور</th><th>الإجراءات</th>
+                  <th>الصورة</th><th>الاسم</th><th>الفئة</th><th>السعر</th><th>المخزون</th><th>الصور</th><th>الإجراءات</th>
                 </tr>
               </thead>
               <tbody id="productsTableBody">
-                <tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><p>جاري تحميل المنتجات...</p></div></td></tr>
+                <tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><p>جاري تحميل المنتجات...</p></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -342,6 +397,35 @@ tr:last-child td{border-bottom:none}
           <div class="progress" id="heroProgress"><div class="progress-bar" id="heroProgressBar"></div></div>
           <div class="preview-grid" id="heroSlidesPreview"></div>
           <div class="hint">الصورة الأولى تُعرض أولاً. يمكنك حذف أي صورة في أي وقت.</div>
+        </div>
+      </section>
+
+      <!-- ─── Reviews ─── -->
+      <section class="section" id="section-reviews">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h3>إدارة التقييمات</h3>
+              <p>موافقة أو رفض تقييمات الزوار</p>
+            </div>
+            <select id="reviewFilter" style="padding:8px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text)">
+              <option value="pending">بانتظار الموافقة</option>
+              <option value="approved">موافق عليه</option>
+              <option value="rejected">مرفوض</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>المنتج</th><th>الزائر</th><th>التعليق</th><th>التقييم</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="reviewsTableBody">
+                <tr><td colspan="7"><div class="empty">جاري تحميل التقييمات...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -392,6 +476,29 @@ tr:last-child td{border-bottom:none}
               </div>
             </div>
 
+            <!-- Refund Settings -->
+            <div class="field" style="margin-top:16px">
+              <label>ضمان الاسترجاع</label>
+              <div class="toggle-wrap">
+                <span class="toggle-label">تفعيل ضمان الاسترجاع</span>
+                <div class="toggle-switch" id="refundToggle" onclick="toggleRefund()"></div>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label>عدد أيام الضمان</label>
+                <input id="settingRefundDays" type="number" min="1" max="365" />
+              </div>
+              <div class="field">
+                <label>نص الضمان بالعربية</label>
+                <input id="settingRefundAr" type="text" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Refund text in English</label>
+              <input id="settingRefundEn" type="text" />
+            </div>
+
             <div class="field">
               <label>ثيم المتجر</label>
               <div class="picker" id="storeThemePicker">
@@ -428,6 +535,9 @@ tr:last-child td{border-bottom:none}
               <p>✅ الشريط الرئيسي — النصوص والصور تُحفظ في Supabase، تظهر عالمياً.</p>
               <p>✅ واتساب، العملة، الفوتر — تُحفظ في Supabase، تظهر عالمياً.</p>
               <p>✅ صور المنتجات — تُرفع إلى Cloudinary وروابطها تُحفظ في Supabase (عمود images JSONB).</p>
+              <p>✅ التقييمات — تُحفظ في Supabase مع حالة موافقة/رفض.</p>
+              <p>✅ الإشعارات — تنبيهات فورية للتقييمات الجديدة.</p>
+              <p>✅ ضمان الاسترجاع — يتحكم به الأدمن ويظهر في المتجر.</p>
               <p>⚠️ السلة — تبقى في localStorage المتصفح (طبيعي ومتعمد لكل زبون).</p>
             </div>
           </div>
@@ -481,6 +591,10 @@ tr:last-child td{border-bottom:none}
               </select>
             </div>
           </div>
+          <div class="field">
+            <label>عدد القطع المتاحة (0 = غير محدد)</label>
+            <input id="fStock" type="number" min="0" value="0" />
+          </div>
           <div style="display:flex;gap:10px;margin-top:8px">
             <button class="btn btn-primary" id="saveProductBtn" type="button" style="flex:1">حفظ المنتج</button>
             <button class="btn btn-ghost" id="cancelModalBtn" type="button">إلغاء</button>
@@ -515,7 +629,7 @@ const CLOUDINARY_CLOUD  = 'dztczxekd';
 const CLOUDINARY_PRESET = 'royal_nexus_unsigned';     
 // ═══════════════════════════════════════════════
 
-const SETTINGS_ID = 1; // الصف الوحيد في store_settings
+const SETTINGS_ID = 1;
 
 const DEFAULT_SETTINGS = {
   store_name: 'STORE',
@@ -526,15 +640,19 @@ const DEFAULT_SETTINGS = {
   admin_mode: 'dark',
   hero_title_ar: '<span>اكتشف</span> أفضل المنتجات',
   hero_title_en: 'Discover <span>Premium</span> Products',
-  hero_subtitle_ar: 'تسوق بذوق رفيع من مجموعتنا المختارة بعناية مع تجربة عرض أسرع وأكثر سلاسة.',
-  hero_subtitle_en: 'Shop from our carefully curated collection with a faster and smoother storefront experience.',
+  hero_subtitle_ar: 'تسوق بذوق رفيع من مجموعتنا المختارة بعناية.',
+  hero_subtitle_en: 'Shop from our carefully curated collection.',
   hero_button_ar: 'تسوق الآن',
   hero_button_en: 'Shop now',
   hero_slides: [],
   contact_email: '',
   contact_phone: '',
   footer_text_ar: 'الطلب والتواصل عبر واتساب',
-  footer_text_en: 'Orders and contact via WhatsApp'
+  footer_text_en: 'Orders and contact via WhatsApp',
+  refund_enabled: false,
+  refund_days: 7,
+  refund_text_ar: 'ضمان استرجاع المال خلال 7 أيام',
+  refund_text_en: 'Money-back guarantee within 7 days'
 };
 
 let settings    = {...DEFAULT_SETTINGS};
@@ -542,6 +660,9 @@ let allProducts = [];
 let editingId   = null;
 let deleteId    = null;
 let productImages = [];
+let notifications = [];
+let reviews = [];
+let notifPolling = null;
 
 // ── Supabase ─────────────────────────────────────
 async function sbFetch(path, options = {}){
@@ -592,9 +713,7 @@ async function saveSettingsToSupabase(partial = {}){
   setSyncState('syncing', 'جاري الحفظ...');
   try{
     const payload = {...settings, ...partial};
-    // store hero_slides as JSON string if not JSONB
     const toSave = {...payload};
-    // Try upsert: if row exists update, else insert
     await sbFetch(`store_settings?id=eq.${SETTINGS_ID}`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
@@ -620,7 +739,6 @@ function applySettingsToUI(){
   document.getElementById('sidebarBrandName').textContent = name + ' — لوحة التحكم';
   document.title = name + ' — لوحة التحكم';
 
-  // Form fields
   document.getElementById('settingStoreName').value  = settings.store_name || '';
   document.getElementById('settingWA').value         = settings.whatsapp || '';
   document.getElementById('settingCurrency').value   = settings.default_currency || 'MAD';
@@ -629,13 +747,18 @@ function applySettingsToUI(){
   document.getElementById('settingFooterAr').value   = settings.footer_text_ar || '';
   document.getElementById('settingFooterEn').value   = settings.footer_text_en || '';
 
-  // Hero fields
   document.getElementById('heroTitleAr').value       = settings.hero_title_ar || '';
   document.getElementById('heroTitleEn').value       = settings.hero_title_en || '';
   document.getElementById('heroSubtitleAr').value    = settings.hero_subtitle_ar || '';
   document.getElementById('heroSubtitleEn').value    = settings.hero_subtitle_en || '';
   document.getElementById('heroButtonAr').value      = settings.hero_button_ar || '';
   document.getElementById('heroButtonEn').value      = settings.hero_button_en || '';
+
+  // Refund settings
+  document.getElementById('refundToggle').classList.toggle('active', settings.refund_enabled === true);
+  document.getElementById('settingRefundDays').value = settings.refund_days || 7;
+  document.getElementById('settingRefundAr').value = settings.refund_text_ar || DEFAULT_SETTINGS.refund_text_ar;
+  document.getElementById('settingRefundEn').value = settings.refund_text_en || DEFAULT_SETTINGS.refund_text_en;
 
   renderThemePicker();
   renderModeSwitch('storeModeSwitch', settings.store_mode || 'dark');
@@ -655,6 +778,17 @@ function renderModeSwitch(groupId, value){
   );
 }
 
+// ── Refund Toggle ────────────────────────────────
+async function toggleRefund(){
+  const el = document.getElementById('refundToggle');
+  const newVal = !el.classList.contains('active');
+  el.classList.toggle('active', newVal);
+  settings.refund_enabled = newVal;
+  await saveSettingsToSupabase({ refund_enabled: newVal });
+  showToast(newVal ? 'تم تفعيل ضمان الاسترجاع' : 'تم إيقاف ضمان الاسترجاع');
+}
+window.toggleRefund = toggleRefund;
+
 // ── Save handlers ─────────────────────────────────
 async function saveGeneralSettings(){
   const partial = {
@@ -665,6 +799,10 @@ async function saveGeneralSettings(){
     contact_phone:   document.getElementById('settingPhone').value.trim(),
     footer_text_ar:  document.getElementById('settingFooterAr').value.trim() || DEFAULT_SETTINGS.footer_text_ar,
     footer_text_en:  document.getElementById('settingFooterEn').value.trim() || DEFAULT_SETTINGS.footer_text_en,
+    refund_days:     parseInt(document.getElementById('settingRefundDays').value) || 7,
+    refund_text_ar:  document.getElementById('settingRefundAr').value.trim() || DEFAULT_SETTINGS.refund_text_ar,
+    refund_text_en:  document.getElementById('settingRefundEn').value.trim() || DEFAULT_SETTINGS.refund_text_en,
+    refund_enabled:  document.getElementById('refundToggle').classList.contains('active')
   };
   const ok = await saveSettingsToSupabase(partial);
   if(ok){
@@ -698,7 +836,7 @@ async function loadProducts(){
     renderTable(allProducts);
     updateStats(allProducts);
   }catch(e){
-    document.getElementById('productsTableBody').innerHTML = `<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><p>تعذر تحميل المنتجات</p></div></td></tr>`;
+    document.getElementById('productsTableBody').innerHTML = `<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><p>تعذر تحميل المنتجات</p></div></td></tr>`;
     showToast('خطأ في تحميل المنتجات', true);
   }
 }
@@ -712,7 +850,7 @@ function getProductImages(product){
 function renderTable(products){
   const tbody = document.getElementById('productsTableBody');
   if(!products.length){
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path></svg><p>لا توجد منتجات بعد</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path></svg><p>لا توجد منتجات بعد</p></div></td></tr>`;
     return;
   }
   tbody.innerHTML = products.map(product => {
@@ -726,6 +864,7 @@ function renderTable(products){
         <td><div class="td-name">${escapeHtml(product.name||'')}</div><div style="font-size:.78rem;color:var(--text-soft)">${escapeHtml(product.name_en||'')}</div></td>
         <td>${product.category?`<span class="tag">${escapeHtml(product.category)}</span>`:'-'}</td>
         <td><div class="td-price">${Number(product.price||0).toFixed(2)} ${escapeHtml(product.currency||settings.default_currency)}</div>${product.old_price?`<div style="text-decoration:line-through;color:var(--text-soft);font-size:.8rem">${Number(product.old_price).toFixed(2)}</div>`:''}</td>
+        <td>${product.stock_count > 0 ? `<span style="color:${product.stock_count<=10?'#dc3545':'var(--accent)'};font-weight:800">${product.stock_count}</span>` : '<span style="color:var(--text-soft)">غير محدد</span>'}</td>
         <td>${images.length} صورة</td>
         <td>
           <div class="actions">
@@ -775,6 +914,7 @@ function openEditModal(id){
   document.getElementById('fOldPrice').value= product.old_price||'';
   document.getElementById('fCat').value     = product.category||'';
   document.getElementById('fCurrency').value= product.currency||settings.default_currency||'MAD';
+  document.getElementById('fStock').value   = product.stock_count||0;
   productImages = [...getProductImages(product)];
   renderProductImagesPreview();
   openModal();
@@ -782,8 +922,9 @@ function openEditModal(id){
 function clearProductForm(){
   editingId = null;
   productImages = [];
-  ['fName','fNameEn','fDesc','fDescEn','fPrice','fOldPrice','fCat'].forEach(id=>document.getElementById(id).value='');
+  ['fName','fNameEn','fDesc','fDescEn','fPrice','fOldPrice','fCat','fStock'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fCurrency').value = settings.default_currency||'MAD';
+  document.getElementById('fStock').value = '0';
   document.getElementById('productImagesInput').value = '';
   document.getElementById('productProgress').style.display = 'none';
   document.getElementById('productProgressBar').style.width = '0%';
@@ -880,7 +1021,6 @@ async function saveProduct(){
   const price = parseFloat(document.getElementById('fPrice').value);
   if(!name || Number.isNaN(price)){ showToast('الاسم والسعر مطلوبان', true); return; }
 
-  // Store images as JSONB array in 'images' column
   const payload = {
     name,
     name_en:      document.getElementById('fNameEn').value.trim()||null,
@@ -891,7 +1031,8 @@ async function saveProduct(){
     category:     document.getElementById('fCat').value.trim()||null,
     currency:     document.getElementById('fCurrency').value,
     image_url:    productImages[0]||null,
-    images:       productImages.length ? productImages : null
+    images:       productImages.length ? productImages : null,
+    stock_count:  parseInt(document.getElementById('fStock').value) || 0
   };
 
   const btn = document.getElementById('saveProductBtn');
@@ -938,6 +1079,177 @@ async function handleDelete(){
   }
 }
 
+// ── Reviews Management ───────────────────────────
+async function loadReviews(filter = 'pending'){
+  try{
+    reviews = await sbFetch(`reviews?select=*,products(name,name_en)&status=eq.${filter}&order=created_at.desc&limit=50`);
+    renderReviewsTable();
+  }catch(e){
+    reviews = [];
+    document.getElementById('reviewsTableBody').innerHTML = 
+      `<tr><td colspan="7"><div class="empty"><p>تعذر تحميل التقييمات</p></div></td></tr>`;
+  }
+}
+
+function renderReviewsTable(){
+  const tbody = document.getElementById('reviewsTableBody');
+  if(!reviews.length){
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><p>لا توجد تقييمات</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = reviews.map(r => {
+    const product = r.products || {};
+    const productName = (product.name || product.name_en || '—');
+    return `
+      <tr>
+        <td><span class="tag">${escapeHtml(productName)}</span></td>
+        <td class="td-name">${escapeHtml(r.visitor_name)}</td>
+        <td style="max-width:200px;font-size:.85rem">${escapeHtml(r.comment)}</td>
+        <td><span style="color:var(--accent);font-weight:800">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td>
+        <td>
+          <span class="tag" style="background:${r.status==='approved'?'rgba(31,139,77,.1)':r.status==='rejected'?'rgba(220,79,71,.1)':'rgba(212,175,55,.1)'};color:${r.status==='approved'?'#1f8b4d':r.status==='rejected'?'#dc4f47':'#d4af37'}">
+            ${r.status==='approved'?'موافق':r.status==='rejected'?'مرفوض':'قيد الانتظار'}
+          </span>
+        </td>
+        <td style="font-size:.8rem;color:var(--text-soft)">${new Date(r.created_at).toLocaleDateString('ar')}</td>
+        <td>
+          <div class="actions">
+            ${r.status==='pending' ? `
+              <button class="action" onclick="approveReview('${r.id}')" title="موافقة" style="color:#1f8b4d">✓</button>
+              <button class="action del" onclick="rejectReview('${r.id}')" title="رفض" style="color:#dc4f47">✕</button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function approveReview(id){
+  try{
+    await sbFetch(`reviews?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ status: 'approved' })
+    });
+    showToast('تمت الموافقة على التقييم');
+    loadReviews(document.getElementById('reviewFilter').value);
+  }catch(e){
+    showToast('فشلت الموافقة', true);
+  }
+}
+window.approveReview = approveReview;
+
+async function rejectReview(id){
+  try{
+    await sbFetch(`reviews?id=eq.${id}`, {
+      method: 'DELETE'
+    });
+    showToast('تم رفض وحذف التقييم');
+    loadReviews(document.getElementById('reviewFilter').value);
+  }catch(e){
+    showToast('فشل الرفض', true);
+  }
+}
+window.rejectReview = rejectReview;
+
+// ── Notifications ────────────────────────────────
+async function loadNotifications(){
+  try{
+    notifications = await sbFetch('notifications?select=*,reviews!inner(visitor_name,rating,product_id,products!inner(name,name_en))&is_read=eq.false&order=created_at.desc&limit=20');
+    if(!notifications || notifications.error || !Array.isArray(notifications)){
+      notifications = await sbFetch('notifications?order=created_at.desc&limit=30');
+    }
+    updateNotifBadge();
+    renderNotifDropdown();
+  }catch(e){
+    notifications = [];
+    updateNotifBadge();
+  }
+}
+
+function updateNotifBadge(){
+  const count = Array.isArray(notifications) ? notifications.filter(n => !n.is_read).length : 0;
+  const badge = document.getElementById('notifCount');
+  if(count > 0){
+    badge.style.display = 'grid';
+    badge.textContent = count;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderNotifDropdown(){
+  const list = document.getElementById('notifList');
+  if(!Array.isArray(notifications) || !notifications.length){
+    list.innerHTML = `<div class="notif-empty"><p>لا توجد إشعارات جديدة</p></div>`;
+    return;
+  }
+  list.innerHTML = notifications.map(n => {
+    const review = n.reviews || {};
+    const product = review.products || {};
+    const productName = product.name || product.name_en || '—';
+    const isNew = !n.is_read;
+    return `
+      <div class="notif-item ${isNew ? 'unread' : ''}" onclick="markNotifRead('${n.id}')">
+        <div class="notif-meta">
+          <span class="notif-name">${escapeHtml(review.visitor_name || 'زائر')}</span>
+          <span class="notif-time">${new Date(n.created_at).toLocaleDateString('ar')}</span>
+        </div>
+        <div class="notif-msg">
+          تقييم جديد على ${escapeHtml(productName)}
+          <br/>
+          <span class="notif-stars">${review.rating ? '★'.repeat(review.rating) : ''}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function markNotifRead(id){
+  try{
+    await sbFetch(`notifications?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ is_read: true })
+    });
+    const notif = Array.isArray(notifications) ? notifications.find(n => n.id === id) : null;
+    if(notif) notif.is_read = true;
+    updateNotifBadge();
+    renderNotifDropdown();
+    if(notif && notif.reference_id){
+      setActiveSection('reviews');
+      loadReviews('pending');
+    }
+  }catch(e){
+    // ignore
+  }
+}
+window.markNotifRead = markNotifRead;
+
+async function markAllRead(){
+  try{
+    await sbFetch('notifications?is_read=eq.false', {
+      method: 'PATCH',
+      body: JSON.stringify({ is_read: true })
+    });
+    if(Array.isArray(notifications)) notifications.forEach(n => n.is_read = true);
+    updateNotifBadge();
+    renderNotifDropdown();
+    showToast('تم تحديد الكل كمقروء');
+  }catch(e){
+    showToast('فشل التحديث', true);
+  }
+}
+window.markAllRead = markAllRead;
+
+// ── Notification Polling ─────────────────────────
+function startNotifPolling(){
+  loadNotifications();
+  if(notifPolling) clearInterval(notifPolling);
+  notifPolling = setInterval(loadNotifications, 30000);
+}
+
 // ── UI helpers ────────────────────────────────────
 function showToast(message, isError=false){
   const el = document.getElementById('toast');
@@ -955,11 +1267,14 @@ function escapeHtml(v=''){
 function setActiveSection(section){
   document.querySelectorAll('.section').forEach(el=>el.classList.toggle('active',el.id===`section-${section}`));
   document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.section===section));
-  const titles = {products:'المنتجات',hero:'الشريط الرئيسي',settings:'الإعدادات العامة'};
+  const titles = {products:'المنتجات',hero:'الشريط الرئيسي',reviews:'التقييمات',settings:'الإعدادات العامة'};
   document.getElementById('sectionTitle').textContent = titles[section]||'لوحة التحكم';
   const isProducts = section==='products';
   document.getElementById('adminSearch').style.display    = isProducts?'':'none';
   document.getElementById('addProductBtn').style.display  = isProducts?'inline-flex':'none';
+  
+  if(section === 'reviews') loadReviews('pending');
+  
   closeSidebar();
 }
 function buildMobileTabs(){
@@ -1026,13 +1341,33 @@ document.querySelectorAll('#adminModeSwitch .mode-chip').forEach(btn=>{
   });
 });
 
+document.getElementById('reviewFilter').addEventListener('change', (e) => {
+  loadReviews(e.target.value);
+});
+
+// Notifications events
+document.getElementById('notificationsBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const dd = document.getElementById('notifDropdown');
+  dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+  if(dd.style.display === 'block') renderNotifDropdown();
+});
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('notifDropdown');
+  const btn = document.getElementById('notificationsBtn');
+  if(!btn.contains(e.target) && !dd.contains(e.target)){
+    dd.style.display = 'none';
+  }
+});
+
 // ── Boot ──────────────────────────────────────────
 (async ()=>{
   await loadSettings();
   buildMobileTabs();
   setActiveSection('products');
   loadProducts();
+  startNotifPolling();
 })();
 </script>
 </body>
-</html>
+  </html>
